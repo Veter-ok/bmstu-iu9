@@ -41,9 +41,9 @@
 
 # Алгоритмы и структуры данных
 
-*  ДЗ 1. [Модуль 1 «Программирование на языке Си»](./AlgorithmsAnd%DataStructures/module1/) (18 баллов)
+*  ДЗ 1. [Модуль 1 «Программирование на языке Си»](./AlgorithmsAndDataStructures/module1/) (18 баллов)
 
-*  ДЗ 2. [Модуль 2 «Сортировка и поиск»](./AlgorithmsAnd%DataStructures/module2/) (39 баллов)
+*  ДЗ 2. [Модуль 2 «Сортировка и поиск»](./AlgorithmsAndDataStructures/module2/) (39 баллов)
 
-*  ДЗ 3. [Модуль 3 «Динамические множества»](./AlgorithmsAnd%DataStructures/module3/) (43 баллов)
+*  ДЗ 3. [Модуль 3 «Динамические множества»](./AlgorithmsAndDataStructures/module3/) (43 баллов)
 
