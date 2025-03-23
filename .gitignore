@@ -1,5 +1,16 @@
 .vscode
 .idea
 .DS_store
+
+
+*.log
+*.out
+*.aux
+*.log
+*.gz
 *.class
+*.tex
 test.*
+!Test.java
+
+images
