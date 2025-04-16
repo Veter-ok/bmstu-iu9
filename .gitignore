@@ -12,5 +12,6 @@
 *.tex
 test.*
 !Test.java
+tempCodeRunnerFile.*
 
 images
