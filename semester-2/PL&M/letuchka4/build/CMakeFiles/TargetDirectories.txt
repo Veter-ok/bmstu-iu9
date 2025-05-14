@@ -1,0 +1,3 @@
+/Users/veter.ok77/Desktop/github/bmstu-iu9/semester-2/PL&M/letuchka4/build/CMakeFiles/opencv_example.dir
+/Users/veter.ok77/Desktop/github/bmstu-iu9/semester-2/PL&M/letuchka4/build/CMakeFiles/edit_cache.dir
+/Users/veter.ok77/Desktop/github/bmstu-iu9/semester-2/PL&M/letuchka4/build/CMakeFiles/rebuild_cache.dir
