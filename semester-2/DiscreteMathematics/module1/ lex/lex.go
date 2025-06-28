@@ -109,10 +109,10 @@ func Insert(t *ElemAVL, s string, x int) *ElemAVL {
     }else{
         r := t;
         for {
-			if r.k == s {
-				r.v = x;
-				return t
-			}
+            if r.k == s {
+                r.v = x;
+                return t
+            }
             if (s < r.k){
                 if (r.left == nil){
                     r.left = y;
