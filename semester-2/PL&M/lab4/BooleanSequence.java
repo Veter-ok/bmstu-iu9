@@ -1,5 +1,4 @@
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 public class BooleanSequence implements Iterable<Integer> {
     private int[] data;
