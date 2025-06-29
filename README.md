@@ -96,4 +96,4 @@
 
 *  ЛР 12. [Обработка текстовых файлов](/semester-2/PL&M/lab12/) (8 баллов)
 
-*  ЛТ 7. [PECS](/semester-2/PL&M/letuchka7/) (? баллов)
+*  ЛТ 7. [PECS](/semester-2/PL&M/letuchka7/) (5 баллов)
