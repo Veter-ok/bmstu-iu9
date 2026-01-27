@@ -1,0 +1,574 @@
+// Создание сайта
+django-admin.exe startproject mysite .
+// mysite/settings.py
+LANGUAGE_CODE = "ru-ru"
+
+TIME_ZONE = 'Europe/Moscow'
+
+/////////////////////
+
+STATIC_URL = "static/"
+
+STATIC_ROOT = BASE_DIR / "static"
+
+MEDIA_URL = "media/"
+
+MEDIA_ROOT = BASE_DIR / "media"
+
+//////////////////////
+
+ALLOWED_HOSTS = ["127.0.0.1"]
+
+// Первый запуск
+
+python manage.py migrate
+
+python manage.py runserver
+
+// Создание приложения
+
+python manage.py startapp myapp
+
+
+// mysite/settings.py
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'myapp', # <--
+]
+
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / "templates"], # <--
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+// myapp/views.py
+
+
+from django.shortcuts import render
+from django.views import View
+
+class Index(View):
+    def get(self, request):
+        return render(request, "myapp/index.html")
+
+
+// templates/myapp/index.html
+{% load static %}
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Site</title>
+  </head>
+  <body>
+
+  </body>
+</html>
+
+// myapp/urls.py
+
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path("", views.Index.as_view(), name="index"),
+]
+
+// mysite/urls.py
+
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path("", include("myapp.urls")),
+]
+
+///////////// Как запаролить страничку
+
+// myapp/views.py
+
+from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin # <--
+from django.views import View
+
+class Index(LoginRequiredMixin, View): # <--
+    def get(self, request):
+        return render(request, "myapp/index.html")
+
+// mysite/settings.py
+
+LOGIN_REDIRECT_URL = "/"
+LOGIN_URL = "/login"
+LOGOUT_REDIRECT_URL = "/"
+
+// myapp/urls.py
+
+from django.urls import path
+from django.contrib.auth.views import LoginView, LogoutView # <--
+from . import views
+
+urlpatterns = [
+    path("login/", LoginView.as_view(), name="login"), # <--
+    path("logout/", LogoutView.as_view(), name="logout"), # <--
+    path("", views.Index.as_view(), name="index"),
+]
+
+// Создание админа
+
+python manage.py createsuperuser
+
+// templates/registration/login.html
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'myapp/css/login.css' %}" />
+    <title>My Site Auth</title>
+  </head>
+  <body>
+    <div class="login-container">
+      <h1 class="login-title">Вход в систему</h1>
+
+      {% if form.errors %}
+      <ul class="errorlist">
+        <li>
+          Неверное имя пользователя или пароль. Пожалуйста, попробуйте снова.
+        </li>
+      </ul>
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+
+        <div class="form-group">
+          <label for="id_username">Имя пользователя</label>
+          <input
+            type="text"
+            name="username"
+            id="id_username"
+            required
+            autofocus
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="id_password">Пароль</label>
+          <input type="password" name="password" id="id_password" required />
+        </div>
+
+        <button type="submit" class="submit-button">Войти</button>
+      </form>
+    </div>
+  </body>
+</html>
+
+// templates/myapp/index.html
+
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'myapp/css/account.css' %}" />
+    <title>TSP Graduation Work</title>
+  </head>
+
+  <body>
+    <header class="header">
+      <div class="user-info">
+        <span class="username">{{user.username}}</span>
+      </div>
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button class="logout-btn">Выйти</button>
+      </form>
+    </header>
+    <div class="container">
+      <div class="column">
+        <h2>Текст</h2>
+        <p>Привет</p>
+      </div>
+    </div>
+  </body>
+</html>
+
+// myapp/static/myapp/css/login.css
+
+body {
+    background-color: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+body, button {
+  overflow: hidden;
+  font-family: 'Roboto', sans-serif;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.6s ease-out;
+}
+
+.login-title {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #555;
+}
+
+.form-group input {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    border-color: #4a90e2;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+}
+
+.submit-button {
+    width: 100%;
+    padding: 16px;
+    background-color: #2196f3;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.submit-button:hover {
+    transform: translateY(-1px);
+}
+
+.submit-button:active {
+    transform: translateY(1px);
+}
+
+.errorlist {
+    color: #ff4444;
+    list-style: none;
+    text-align: center;
+    padding: 0;
+    margin-bottom: 1rem;
+    animation: shake 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    20%,
+    60% {
+        transform: translateX(-5px);
+    }
+
+    40%,
+    80% {
+        transform: translateX(5px);
+    }
+}
+
+// myapp/static/myapp/css/account.css
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #f5f5f5;
+  color: #333;
+}
+body, button {
+  overflow: hidden;
+  font-family: 'Roboto', sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  gap: 15px;
+}
+
+
+.logout-btn {
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, transform 0.3s; 
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+  padding: 6px 12px;
+  background-color: #e32636;
+  color: white;
+  transition: all 0.3s ease;
+}
+.logout-btn:hover{
+  transform: translateY(-1px);
+}
+
+.logout-btn:active{
+  transform: translateY(1px);
+}
+
+.container {
+  display: flex;
+  padding: 20px;
+  gap: 20px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.column {
+  flex: 1;
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 100px);
+}
+
+h2 {
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  text-align: center;
+}
+
+
+///// Как побороть кеширование страниц (бонус)
+
+// myapp/middleware.py
+
+class NoCacheMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        if request.user.is_authenticated:
+            response["Cache-Control"] = "no-store, must-revalidate"
+            response["Pragma"] = "no-cache"
+            response["Expires"] = "0"
+        return response
+
+// mysite/settings.py
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'myapp.middleware.NoCacheMiddleware', # <-- 
+]
+
+//////////// Подготовка к проду
+
+// mysite/settings.py
+
+DEBUG = False
+
+// Собираем статику
+
+python manage.py collectstatic
+
+// mysite/urls.py (Так делать не надо!!, только в научных целях)
+
+from django.contrib import admin
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path("", include("myapp.urls")),
+]
+
+if not settings.DEBUG:
+    settings.DEBUG = True 
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    settings.DEBUG = False
+
+// Как правильно (на сервере)
+
+// Создание базы данных
+
+sudo -i -u postgres
+createuser --interactive
+createdb name
+в команде psql ->
+GRANT ALL PRIVILEGES ON DATABASE dbname TO user;
+ALTER DATABASE dbname OWNER TO user;
+ALTER USER user PASSWORD '123';
+\l
+\q
+
+
+// mysite/settings.py
+ALLOWED_HOSTS = ["127.0.0.1", "185.104.248.18"]
+
+DATABASES = {
+    "default": {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': '',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
+    }
+}
+
+// requirements.txt
+
+psycopg[binary,pool]
+gunicorn
+
+// еще раз миграции
+
+python manage.py migrate
+
+// Создаем демона //
+
+// /etc/systemd/system/gunicorn.socket
+
+[Unit]
+Description=gunicorn socket
+[Socket]
+ListenStream=/run/gunicorn.sock
+[Install]
+WantedBy=sockets.target
+
+// /etc/systemd/system/gunicorn.service
+
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+[Service]
+User=andrey
+Group=www-data
+WorkingDirectory=/home/andrey/work/TeachingPracticePrivate
+ExecStart=/home/andrey/work/TeachingPracticePrivate/.venv/bin/gunicorn \
+          --access-logfile - \
+          --workers 3 \
+          --bind unix:/run/gunicorn.sock \
+          mysite.wsgi:application
+[Install]
+WantedBy=multi-user.target
+
+// Запускаем
+
+sudo systemctl start gunicorn.socket
+sudo systemctl enable gunicorn.socket
+sudo systemctl status gunicorn.socket
+
+// Перезапускаем
+
+sudo systemctl daemon-reload
+sudo systemctl restart gunicorn
+
+// /etc/nginx/sites-available/mysite
+
+
+server { 
+    listen 80 default_server;
+    
+    location /static/ { 
+        alias /home/andrey/work/TeachingPracticePrivate/static/;
+    }
+
+    location / { 
+        include proxy_params;
+        proxy_pass http://unix:/run/gunicorn.sock;
+    }
+}
+
+// Выполнить
+ln -s /etc/nginx/sites-available/mysite /etc/nginx/sites-enabled/
+nginx -t
+sudo service nginx restart
+
+
+
+
+
+
+
+

@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'myapp/css/account.css' %}" />
+    <title>My Site</title>
+    <script src="{% static 'myapp/js/account.js' %}" type="module"></script>
+  </head>
+
+  <body>
+    <header class="header">
+      <div class="user-info">
+        <span class="username">{{user.username}}</span>
+      </div>
+      <nav class="navigation">
+        <a href="{% url 'about' %}" class="nav-link">О себе</a>
+        <a href="{% url 'contacts' %}" class="nav-link">Контакты</a>
+        <a href="{% url 'images' %}" class="nav-link">Изображение</a>
+      </nav>
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button class="logout-btn">Выйти</button>
+      </form>
+    </header>
+
+    {% block content %}
+    <!-- Контент главной страницы -->
+    <div class="container">
+      <div class="column">
+        <h2>Сгенерировать токен</h2>
+
+        <div class="form-group">
+          <label for="token-select">Название токена:</label>
+          <input
+            type="text"
+            id="token-name"
+            placeholder="Вставьте название сюда"
+            maxlength="100"
+          />
+          <div class="error-message" id="token-select-error">Пусто</div>
+        </div>
+
+        <button class="submit-btn" id="apply-btn">Сгенерировать</button>
+        <div class="token-list" id="firstTokenList">
+          <h3 id="firstTokenListTitle">Токены:</h3>
+          {% for user_token in user_tokens %}
+          <div class="token">
+            <div class="token-info">
+              <span class="token-name">{{user_token.name}}</span>
+            </div>
+            <div class="token-item">
+              <span class="token-value">{{user_token.token}}</span>
+              <button class="copy-btn">Копировать</button>
+              <button class="del-btn" data-id="{{ user_token.id }}">Удалить</button>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% endblock %}
+
+    <script>
+      const token = "{{csrf_token}}",
+        index = "{% url 'index' %}";
+    </script>
+  </body>
+</html>

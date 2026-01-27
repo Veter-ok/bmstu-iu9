@@ -1,0 +1,53 @@
+{% extends "myapp/index.html" %}
+{% block title %}Контакты — TSP Graduation Work{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="column">
+    <h2>Контакты</h2>
+
+    <p>
+      Почта: 
+      <span class="copyable" data-copy="example@mail.ru">example@mail.ru</span><br />
+      Телефон: 
+      <span class="copyable" data-copy="+7 (900) 123-45-67">+7 (900) 123-45-67</span>
+    </p>
+
+    <div id="copy-message" style="
+        display:none;
+        position:fixed;
+        bottom:20px;
+        right:20px;
+        background:#4CAF50;
+        color:white;
+        padding:10px 20px;
+        border-radius:8px;
+        box-shadow:0 2px 6px rgba(0,0,0,0.3);
+      ">
+      Скопировано!
+    </div>
+  </div>
+</div>
+
+<script>
+  // выбираем все элементы, которые можно копировать
+  document.querySelectorAll('.copyable').forEach(el => {
+    el.style.cursor = 'pointer';
+    el.style.textDecoration = 'underline';
+    el.style.textDecorationStyle = 'dotted';
+
+    el.addEventListener('click', async () => {
+      const text = el.getAttribute('data-copy');
+      try {
+        await navigator.clipboard.writeText(text);
+
+        // показываем уведомление
+        const msg = document.getElementById('copy-message');
+        msg.style.display = 'block';
+        setTimeout(() => { msg.style.display = 'none'; }, 1500);
+      } catch (err) {
+        alert('Не удалось скопировать 😞');
+      }
+    });
+  });
+</script>
+{% endblock %}

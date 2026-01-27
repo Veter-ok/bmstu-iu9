@@ -1,0 +1,6 @@
+django
+psycopg[binary,pool]
+gunicorn
+scikit-learn
+pandas
+kagglehub

@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Отзывы о фильмах</title>
+  <link rel="stylesheet" href="{% static 'myapp/css/account.css' %}">
+</head>
+<body>
+  <header class="header">
+    <div class="user-info">
+      <span class="username">{{ user.username }}</span>
+    </div>
+    <nav class="navigation">
+      <a href="{% url 'about' %}" class="nav-link">О себе</a>
+      <a href="{% url 'contacts' %}" class="nav-link">Контакты</a>
+      <a href="{% url 'images' %}" class="nav-link">Изображение</a>
+    </nav>
+    <form method="post" action="{% url 'logout' %}">
+      {% csrf_token %}
+      <button class="logout-btn">Выйти</button>
+    </form>
+  </header>
+
+  <div class="container">
+    <div class="column">
+      <h2>Оставьте отзыв о фильме</h2>
+      <form method="post" action="{% url 'add-review' %}">
+        {% csrf_token %}
+        <textarea name="text" rows="4" placeholder="Введите отзыв..."></textarea>
+        <button type="submit" class="submit-btn">Отправить</button>
+      </form>
+      <h3 style="margin-top: 20px;">Отзывы:</h3>
+      {% for review in reviews %}
+<div class="token {% if review.sentiment %}positive{% else %}negative{% endif %}" id="review-{{ review.id }}">
+    <p><b>{{ review.user.username }}</b>: {{ review.text }}</p>
+    <button class="del-btn" onclick="deleteReview({{ review.id }})">Удалить</button>
+</div>
+{% endfor %}
+    </div>
+  </div>
+  <script>
+function deleteReview(reviewId) {
+    fetch(`/delete-review/${reviewId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',  // передаем CSRF токен
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'ok') {
+            // убираем элемент со страницы
+            const reviewDiv = document.getElementById(`review-${reviewId}`);
+            if (reviewDiv) reviewDiv.remove();
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => console.error('Ошибка:', error));
+}
+</script>
+</body>
+</html>

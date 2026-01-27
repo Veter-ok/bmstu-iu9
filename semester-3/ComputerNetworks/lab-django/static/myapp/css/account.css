@@ -1,0 +1,151 @@
+/* ===== Базовые стили ===== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #f5f5f5;
+  color: #333;
+  font-family: 'Roboto', sans-serif;
+}
+
+button {
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+button:active {
+  transform: translateY(1px);
+}
+
+/* ===== Хедер ===== */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.user-info {
+  font-size: 20px;
+}
+
+.logout-btn {
+  background-color: #e32636;
+  color: white;
+  padding: 6px 12px;
+}
+
+.logout-btn:hover {
+  background-color: #c51f30;
+}
+
+/* ===== Основной контейнер ===== */
+.container {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  gap: 20px;
+}
+
+.column {
+  width: 100%;
+  max-width: 700px;
+  background-color: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  min-height: 80vh;
+}
+
+/* ===== Заголовки ===== */
+h2, h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+/* ===== Форма отправки отзыва ===== */
+textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  resize: vertical;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.submit-btn {
+  background-color: #2196f3;
+  color: white;
+  padding: 10px 20px;
+  align-self: center;
+}
+
+.submit-btn:hover {
+  background-color: #1a82d2;
+}
+
+/* ===== Список отзывов ===== */
+.token-list {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ===== Отзыв ===== */
+.token {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.token:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+/* ===== Подсветка положительных и отрицательных ===== */
+.token.positive {
+  background-color: #d4edda;
+  color: #155724;
+  border-color: #c3e6cb;
+}
+
+.token.negative {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-color: #f5c6cb;
+}
+
+/* ===== Кнопка удалить ===== */
+.del-btn {
+  background-color: #e32636;
+  color: white;
+  padding: 6px 12px;
+  align-self: flex-end;
+  margin-top: 10px;
+  border-radius: 6px;
+}
+
+.del-btn:hover {
+  background-color: #c51f30;
+}
