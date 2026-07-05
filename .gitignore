@@ -15,3 +15,6 @@ test.*
 tempCodeRunnerFile.*
 
 images
+*-adminsdk-*.json
+semester-3/MathematicalAnalysis
+semester-4/CompAnal
